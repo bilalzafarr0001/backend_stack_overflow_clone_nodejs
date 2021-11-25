@@ -129,7 +129,9 @@ exports.search = async (req, res, next) => {
 exports.find = async (req, res, next) => {
   try {
     const users = await User.findOne({ username: req.params.username });
-    res.json(users);
+    return res.status(200).json({
+      data: users,
+    });
   } catch (error) {
     next(error);
   }

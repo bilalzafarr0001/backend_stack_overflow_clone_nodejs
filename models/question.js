@@ -71,26 +71,29 @@ questionSchema.methods = {
   },
 };
 
-questionSchema.pre(/^find/, function () {
-  this.populate("author")
-    .populate("comments.author", "-role")
-    .populate("answers.author", "-role")
-    .populate("answers.comments.author", "-role");
-});
+// questionSchema.pre(/^find/, function () {
+//   this.populate("author")
+//     .populate("comments.author", "-role")
+//     .populate("answers.author", "-role")
+//     .populate("answers.comments.author", "-role");
+// });
 
-questionSchema.pre("save", function (next) {
-  this.wasNew = this.isNew;
-  next();
-});
+// questionSchema.pre("save", function (next) {
+//   this.wasNew = this.isNew;
+//   next();
+// });
 
 questionSchema.post("save", function (doc, next) {
-  if (this.wasNew) this.vote(this.author._id, 1);
-  this.populate("author")
-    .populate("answers.author", "-role")
-    .populate("comments.author", "-role")
-    .populate("answers.comments.author", "-role")
-    .execPopulate()
-    .then(() => next());
+  //if (this.wasNew)
+  this.vote(this.author._id, 1);
+  // this.populate("author")
+  //   .populate("answers.author", "-role")
+  //   .populate("comments.author", "-role")
+  //   .populate("answers.comments.author", "-role")
+  //   .execPopulate()
+  //   .then(() =>
+  next();
+  //);
 });
 
 module.exports = mongoose.model("Question", questionSchema);
