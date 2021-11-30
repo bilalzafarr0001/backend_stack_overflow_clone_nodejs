@@ -36,11 +36,11 @@ exports.createComment = async (req, res, next) => {
     if (req.params.answer) {
       req.answer.addComment(id, comment);
       const question = await req.question.save();
-      return res.status(201).json(question);
+      return res.status(201).json({ question });
     }
 
     const question = await req.question.addComment(id, comment);
-    return res.status(201).json(question);
+    return res.status(201).json({ question });
   } catch (error) {
     next(error);
   }

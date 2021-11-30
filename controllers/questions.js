@@ -34,7 +34,7 @@ exports.createQuestion = async (req, res, next) => {
       tags,
       text,
     });
-    res.status(201).json(question);
+    return res.status(201).json({ question });
   } catch (error) {
     console.log("Eror while creating a question .........");
     next(error);
@@ -48,8 +48,30 @@ exports.show = async (req, res, next) => {
       id,
       { $inc: { views: 1 } },
       { new: true }
-    ).populate("answers");
-    res.json(question);
+    )
+      .populate({
+        path: "answers",
+        populate: {
+          path: "author",
+          select: "username",
+        },
+        populate: {
+          path: "comments",
+          populate: {
+            path: "author",
+            select: "username",
+          },
+        },
+      })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          select: "username",
+        },
+      });
+    console.log(question);
+    return res.status(201).json({ question });
   } catch (error) {
     next(error);
   }
@@ -59,7 +81,7 @@ exports.listQuestions = async (req, res, next) => {
   try {
     const { sortType = "-score" } = req.body;
     const questions = await Question.find().sort(sortType);
-    res.json(questions);
+    return res.status(200).json({ questions });
   } catch (error) {
     next(error);
   }
@@ -72,7 +94,7 @@ exports.listByTags = async (req, res, next) => {
       sortType
     );
     console.log(req.question);
-    res.json(questions);
+    return res.status(200).json({ questions });
   } catch (error) {
     next(error);
   }
@@ -86,7 +108,7 @@ exports.listByUser = async (req, res, next) => {
     const questions = await Question.find({ author: author.id })
       .sort(sortType)
       .limit(10);
-    res.json(questions);
+    return res.status(200).json({ questions });
   } catch (error) {
     next(error);
   }

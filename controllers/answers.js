@@ -28,7 +28,7 @@ exports.createAnswer = async (req, res, next) => {
     const question = await req.question.addAnswer(id, text);
     console.log("Req.Answer", req.answer);
 
-    res.status(201).json(question);
+    res.status(201).json({ question });
   } catch (error) {
     next(error);
   }
@@ -38,7 +38,7 @@ exports.removeAnswer = async (req, res, next) => {
   try {
     const { answer } = req.params;
     const question = await req.question.removeAnswer(answer);
-    res.json(question);
+    res.status(201).json({ question });
   } catch (error) {
     next(error);
   }

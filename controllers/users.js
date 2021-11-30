@@ -109,7 +109,7 @@ exports.listUsers = async (req, res, next) => {
   try {
     const { sortType = "-created" } = req.body;
     const users = await User.find().sort(sortType);
-    res.json(users);
+    return res.status(200).json({ users });
   } catch (error) {
     next(error);
   }
